@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}Close Ticket{% endblock %}
+{% block content %}
+<h2>Close Ticket #{{ ticket.id }}</h2>
+<form method="post">
+  {% csrf_token %}
+  <label for="resolution" class="form-label">Resolution details:</label>
+  <textarea name="resolution" id="resolution" rows="4" class="form-control mb-3"></textarea>
+  <button type="submit" class="btn btn-success">Close Ticket</button>
+  <a href="{% url 'tickets:ticket_detail' ticket.id %}" class="btn btn-outline-secondary">Cancel</a>
+</form>
+{% endblock %}

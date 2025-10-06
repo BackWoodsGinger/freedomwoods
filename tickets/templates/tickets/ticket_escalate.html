@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}Escalate Ticket{% endblock %}
+{% block content %}
+<h2>Escalate Ticket #{{ ticket.id }}</h2>
+<form method="post">
+  {% csrf_token %}
+  <label for="level" class="form-label">Select escalation level:</label>
+  <select name="level" id="level" class="form-select mb-3">
+    <option value="2">Level 2 Support</option>
+    <option value="3">Level 3 Support</option>
+  </select>
+  <button type="submit" class="btn btn-warning">Escalate</button>
+  <a href="{% url 'tickets:ticket_detail' ticket.id %}" class="btn btn-outline-secondary">Cancel</a>
+</form>
+{% endblock %}

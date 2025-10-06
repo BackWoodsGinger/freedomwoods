@@ -1,0 +1,84 @@
+/* -------------------------
+   Body background & overlay
+------------------------- */
+body {
+    background-image: url("../images/logo.webp");
+    background-size: contain;       /* preserve logo aspect ratio */
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Overlay to reduce brightness of background */
+body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(236, 231, 218, 0.75); /* adjust opacity */
+    z-index: 0;
+}
+
+/* Ensure page content is above overlay */
+main, nav, footer, .container, .hero {
+    position: relative;
+    z-index: 1;
+}
+
+/* -------------------------
+   Hero section styling
+------------------------- */
+.hero {
+    position: relative;
+    overflow: hidden;
+    height: 400px;                   /* adjust hero height */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: none;                /* remove old gradient */
+    color: #0F0;                     /* fallback text color */
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+/* Matrix canvas inside hero */
+#matrixCanvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+    z-index: 0;
+}
+
+/* Hero content above matrix animation */
+.hero-content {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+/* -------------------------
+   General container styling
+------------------------- */
+.container {
+    background-color: rgba(150, 145, 145, 0.7); /* semi-transparent content background */
+    padding: 1rem;
+    border-radius: 0.25rem;
+}
+
+/* -------------------------
+   Footer styling
+------------------------- */
+footer {
+    background-color: #212529;
+    color: white;
+    text-align: center;
+    padding: 1rem 0;
+}
