@@ -8,19 +8,21 @@
 
 {% block content %}
 <h2 class="text-center mb-4">Our Projects</h2>
-<div class="row g-4">
+<div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
   {% for app in apps %}
-    <div class="card mb-3">
+  <div class="col">
+    <div class="card h-100 shadow-sm">
       <div class="card-body">
         <h5 class="card-title">{{ app.name }}</h5>
         <p class="card-text">{{ app.description }}</p>
         {% if app.url_name %}
-          <a href="{% url app.url_name %}" class="btn btn-primary">Launch</a>
+          <a href="{% url app.url_name %}" class="btn btn-primary w-100">Launch</a>
         {% else %}
-          <button class="btn btn-secondary" disabled>Coming Soon</button>
+          <button class="btn btn-secondary w-100" disabled>Coming Soon</button>
         {% endif %}
       </div>
     </div>
+  </div>
   {% endfor %}
 </div>
 {% endblock %}
