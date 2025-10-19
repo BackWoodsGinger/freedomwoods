@@ -45,7 +45,7 @@ main, nav, footer, .container, .hero {
     -webkit-backdrop-filter: blur(12px) saturate(180%);
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
     border-radius: 20px;
-}
+} 
 
 /* Glassy card effect for ticket pages */
 .glass-card {
@@ -55,6 +55,7 @@ main, nav, footer, .container, .hero {
   border: 1px solid rgba(255, 255, 255, 0.25);
   border-radius: 1rem;
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  color:#070505;
 }
 
 /* -------------------------
@@ -163,7 +164,7 @@ main, nav, footer, .container, .hero {
     backdrop-filter: blur(10px) saturate(180%);
     -webkit-backdrop-filter: blur(10px) saturate(180%);
     box-shadow: 0 8px 32px rgba(0,0,0,0.25);
-    color: #fff;
+    color: #070505;
 }
 
 /* -------------------------
