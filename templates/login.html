@@ -1,12 +1,16 @@
 {% extends "base.html" %}
+{% load crispy_forms_tags %}
 
 {% block content %}
-<div class="container mt-5">
-  <h2>Login</h2>
-  <form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit" class="btn btn-primary">Login</button>
-  </form>
+<div class="container d-flex justify-content-center align-items-center min-vh-100">
+  <div class="card glass-card p-4" style="width: 100%; max-width: 400px;">
+    <h3 class="mb-4 text-center">Sign In</h3>
+
+    <form method="post">
+      {% csrf_token %}
+      {{ form|crispy }}
+      <button type="submit" class="btn btn-primary w-100 mt-2">Login</button>
+    </form>
+  </div>
 </div>
 {% endblock %}

@@ -1,11 +1,20 @@
 {% extends "base.html" %}
+{% load crispy_forms_tags %}
+
 {% block title %}New Ticket{% endblock %}
+
 {% block content %}
-<h2>Create a New Ticket</h2>
-<form method="post">
-  {% csrf_token %}
-  {{ form.as_p }}
-  <button type="submit" class="btn btn-primary">Submit</button>
-  <a href="{% url 'tickets:ticket_list' %}" class="btn btn-outline-secondary">Cancel</a>
-</form>
+<div class="container my-5">
+  <div class="card shadow-lg p-4">
+    <h2 class="mb-4 text-center">Create a New Ticket</h2>
+
+    <form method="post" novalidate>
+      {% csrf_token %}
+      {{ form|crispy }}
+      <div class="text-center">
+        <a href="{% url 'tickets:ticket_list' %}" class="btn btn-outline-secondary mt-2">Cancel</a>
+      </div>
+    </form>
+  </div>
+</div>
 {% endblock %}

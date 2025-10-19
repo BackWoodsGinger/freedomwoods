@@ -1,24 +1,37 @@
 {% extends "base.html" %}
 {% block title %}Ticket #{{ ticket.id }}{% endblock %}
+
 {% block content %}
-<h2>{{ ticket.title }}</h2>
-<p><strong>Status:</strong> {{ ticket.status }}</p>
-<p><strong>Priority:</strong> {{ ticket.priority }}</p>
-<p><strong>Description:</strong><br>{{ ticket.description }}</p>
+<div class="container py-4">
+  <div class="glass-card p-4 shadow-sm">
+    <h2 class="fw-bold text-dark mb-3">{{ ticket.title }}</h2>
+    <p><strong>Status:</strong> 
+      <span class="badge 
+        {% if ticket.status == 'Closed' %}bg-success
+        {% elif ticket.status == 'Pending' %}bg-warning text-dark
+        {% else %}bg-secondary{% endif %}">
+        {{ ticket.status }}
+      </span>
+    </p>
+    <p><strong>Priority:</strong> {{ ticket.priority }}</p>
+    <p><strong>Description:</strong><br>{{ ticket.description }}</p>
 
-{% if ticket.resolution %}
-  <hr>
-  <p><strong>Resolution:</strong><br>{{ ticket.resolution }}</p>
-{% endif %}
+    {% if ticket.resolution %}
+    <hr>
+    <p><strong>Resolution:</strong><br>{{ ticket.resolution }}</p>
+    {% endif %}
 
-<hr>
+    <hr>
 
-{% if ticket.status == "New" %}
-  <a href="{% url 'tickets:ticket_claim' ticket.id %}" class="btn btn-warning">Claim</a>
-{% elif ticket.status == "Pending" and ticket.assigned_to == user %}
-  <a href="{% url 'tickets:ticket_escalate' ticket.id %}" class="btn btn-secondary">Escalate</a>
-  <a href="{% url 'tickets:ticket_close' ticket.id %}" class="btn btn-success">Close</a>
-{% endif %}
-
-<a href="{% url 'tickets:ticket_list' %}" class="btn btn-outline-secondary">Back</a>
+    <div class="d-flex flex-wrap gap-2 mt-3">
+      {% if ticket.status == "New" %}
+        <a href="{% url 'tickets:ticket_claim' ticket.id %}" class="btn btn-warning">Claim</a>
+      {% elif ticket.status == "Pending" and ticket.assigned_to == user %}
+        <a href="{% url 'tickets:ticket_escalate' ticket.id %}" class="btn btn-secondary">Escalate</a>
+        <a href="{% url 'tickets:ticket_close' ticket.id %}" class="btn btn-success">Close</a>
+      {% endif %}
+      <a href="{% url 'tickets:ticket_list' %}" class="btn btn-outline-secondary">Back</a>
+    </div>
+  </div>
+</div>
 {% endblock %}
