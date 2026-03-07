@@ -1,0 +1,176 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% block title %}{{ dataset.name }} — Data Analytics{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h2 class="fw-bold text-dark">{{ dataset.name }}</h2>
+      {% if dataset.description %}<p class="text-muted mb-0">{{ dataset.description }}</p>{% endif %}
+    </div>
+    <div>
+      <a href="{% url 'dataanalysis:dataset_list' %}" class="btn btn-outline-secondary btn-sm">← Back</a>
+      <a href="{% url 'dataanalysis:dataset_delete' dataset.pk %}" class="btn btn-outline-danger btn-sm">Delete</a>
+    </div>
+  </div>
+
+  {% if messages %}
+  <div class="mb-3">
+    {% for message in messages %}
+    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">{{ message }}
+      <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <div class="row">
+    <div class="col-lg-6 mb-4">
+      <div class="card shadow-sm">
+        <div class="card-header bg-light fw-bold">Upload file (Excel or CSV)</div>
+        <div class="card-body">
+          <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="upload">
+            {{ upload_form.file }}
+            <div class="mt-2">
+              <label class="form-label small">Type</label>
+              {{ upload_form.file_type }}
+            </div>
+            <button type="submit" class="btn btn-primary mt-2">Upload</button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-6 mb-4">
+      <div class="card shadow-sm">
+        <div class="card-header bg-light fw-bold">Add record manually</div>
+        <div class="card-body">
+          {% if not variables %}
+          <p class="small text-muted">Add your first record to define variables (one record creates the columns).</p>
+          <form method="post">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="manual">
+            <label class="form-label small">Variable names (comma-separated)</label>
+            <input type="text" name="variable_names" class="form-control form-control-sm mb-2" placeholder="e.g. Diameter, Batch, Pressure">
+            <label class="form-label small">Values (comma-separated, same order)</label>
+            <input type="text" name="variable_values" class="form-control form-control-sm mb-2" placeholder="e.g. 10.2, A, 101.3">
+            <button type="submit" class="btn btn-primary btn-sm">Add first record</button>
+          </form>
+          {% elif record_form %}
+          <form method="post">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="manual">
+            {% for field in record_form %}
+            <div class="mb-2">
+              <label class="form-label small mb-0">{{ field.label }}</label>
+              {{ field }}
+            </div>
+            {% endfor %}
+            <button type="submit" class="btn btn-primary btn-sm mt-2">Add record</button>
+          </form>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card shadow-sm mb-4">
+    <div class="card-header bg-light d-flex justify-content-between align-items-center flex-wrap gap-2">
+      <span class="fw-bold">Data ({{ row_count }} rows)</span>
+      <div>
+        {% if numeric_cols %}
+        <a href="{% url 'dataanalysis:dataset_visualize' dataset.pk %}" class="btn btn-sm btn-outline-primary me-1">Visualize</a>
+        <a href="{% url 'dataanalysis:run_analytics' dataset.pk %}" class="btn btn-sm btn-success">Run analytics</a>
+        {% endif %}
+      </div>
+    </div>
+    <div class="card-body overflow-auto">
+      {% if row_count == 0 %}
+      <p class="text-muted mb-0">No data yet. Upload a file or add records above.</p>
+      {% else %}
+      <form method="get" action="{% url 'dataanalysis:run_analytics' dataset.pk %}" id="analyticsForm" class="mb-3">
+        <div class="row g-2 align-items-end">
+          <div class="col-auto">
+            <label class="form-label small mb-0">Analysis</label>
+            <select name="analysis" class="form-select form-select-sm" style="width:auto;">
+              {% for value, label in analytics_form.fields.analysis.choices %}
+              <option value="{{ value }}">{{ label }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="col-auto">
+            <label class="form-label small mb-0">Variable</label>
+            <select name="variable" class="form-select form-select-sm" style="width:auto;">
+              {% for col in numeric_cols %}<option value="{{ col }}">{{ col }}</option>{% endfor %}
+            </select>
+          </div>
+          <div class="col-auto">
+            <label class="form-label small mb-0">2nd variable (if needed)</label>
+            <select name="variable2" class="form-select form-select-sm" style="width:auto;">
+              <option value="">—</option>
+              {% for col in variables %}<option value="{{ col }}">{{ col }}</option>{% endfor %}
+            </select>
+          </div>
+          <div class="col-auto">
+            <label class="form-label small mb-0">Subgroup n</label>
+            <input type="number" name="subgroup_size" value="5" min="2" max="25" class="form-control form-control-sm" style="width:4rem;">
+          </div>
+          <div class="col-auto">
+            <label class="form-label small mb-0">USL</label>
+            <input type="number" name="usl" step="any" class="form-control form-control-sm" style="width:5rem;" placeholder="—">
+          </div>
+          <div class="col-auto">
+            <label class="form-label small mb-0">LSL</label>
+            <input type="number" name="lsl" step="any" class="form-control form-control-sm" style="width:5rem;" placeholder="—">
+          </div>
+          <div class="col-auto">
+            <label class="form-label small mb-0">μ₀</label>
+            <input type="number" name="mu0" step="any" class="form-control form-control-sm" style="width:5rem;" placeholder="—">
+          </div>
+          <div class="col-auto">
+            <button type="submit" class="btn btn-success btn-sm">Run</button>
+          </div>
+        </div>
+      </form>
+      <table class="table table-sm table-striped mb-0" style="font-size:0.85rem;">
+        <thead>
+          <tr>
+            {% for col in df_columns %}<th>{{ col }}</th>{% endfor %}
+          </tr>
+        </thead>
+        <tbody>
+          {% for row in table_rows %}
+          <tr>{% for cell in row %}<td>{{ cell }}</td>{% endfor %}</tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      {% if paginator and paginator.num_pages > 1 %}
+      <nav aria-label="Data pages" class="mt-3">
+        <ul class="pagination pagination-sm mb-0 flex-wrap">
+          <li class="page-item {% if not page.has_previous %}disabled{% endif %}">
+            <a class="page-link" href="?page=1">First</a>
+          </li>
+          <li class="page-item {% if not page.has_previous %}disabled{% endif %}">
+            <a class="page-link" href="?page={% if page.has_previous %}{{ page.previous_page_number }}{% else %}1{% endif %}">Previous</a>
+          </li>
+          <li class="page-item disabled"><span class="page-link">Page {{ page.number }} of {{ paginator.num_pages }}</span></li>
+          <li class="page-item {% if not page.has_next %}disabled{% endif %}">
+            <a class="page-link" href="?page={% if page.has_next %}{{ page.next_page_number }}{% else %}{{ paginator.num_pages }}{% endif %}">Next</a>
+          </li>
+          <li class="page-item {% if not page.has_next %}disabled{% endif %}">
+            <a class="page-link" href="?page={{ paginator.num_pages }}">Last</a>
+          </li>
+        </ul>
+        <p class="small text-muted mt-1 mb-0">Rows {{ page.start_index }}–{{ page.end_index }} of {{ row_count }}</p>
+      </nav>
+      {% elif row_count > 0 %}
+      <p class="small text-muted mt-2 mb-0">Showing all {{ row_count }} rows.</p>
+      {% endif %}
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

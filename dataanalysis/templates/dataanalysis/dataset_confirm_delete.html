@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Delete {{ dataset.name }}{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+  <h2 class="fw-bold text-dark mb-4">Delete dataset</h2>
+  <p>Are you sure you want to delete <strong>{{ dataset.name }}</strong>? All files and manual records will be removed.</p>
+  <form method="post">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger">Delete</button>
+    <a href="{% url 'dataanalysis:dataset_detail' dataset.pk %}" class="btn btn-outline-secondary">Cancel</a>
+  </form>
+</div>
+{% endblock %}

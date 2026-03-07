@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% block title %}{{ title }} — Data Analytics{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+  <h2 class="fw-bold text-dark mb-4">{{ title }}</h2>
+  <form method="post" class="mb-4">
+    {% csrf_token %}
+    {{ form|crispy }}
+    <button type="submit" class="btn btn-primary">Save</button>
+    <a href="{% url 'dataanalysis:dataset_list' %}" class="btn btn-outline-secondary">Cancel</a>
+  </form>
+</div>
+{% endblock %}

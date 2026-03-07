@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block title %}Visualize — {{ dataset.name }}{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="fw-bold text-dark">Visualize — {{ dataset.name }}</h2>
+    <a href="{% url 'dataanalysis:dataset_detail' dataset.pk %}" class="btn btn-outline-secondary btn-sm">← Back to dataset</a>
+  </div>
+
+  <div class="card shadow-sm mb-4">
+    <div class="card-body">
+      <form method="get" class="row g-2 align-items-end">
+        <div class="col-auto">
+          <label class="form-label small mb-0">Variable</label>
+          <select name="variable" class="form-select form-select-sm" style="width: auto;">
+            {% for col in numeric_cols %}
+            <option value="{{ col }}" {% if variable == col %}selected{% endif %}>{{ col }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="col-auto">
+          <label class="form-label small mb-0">Chart</label>
+          <select name="chart_type" class="form-select form-select-sm" style="width: auto;">
+            <option value="histogram" {% if chart_type == "histogram" %}selected{% endif %}>Histogram</option>
+            <option value="run" {% if chart_type == "run" %}selected{% endif %}>Run chart</option>
+          </select>
+        </div>
+        <div class="col-auto">
+          <button type="submit" class="btn btn-primary btn-sm">Update</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  {% if chart %}
+  <div class="card shadow-sm">
+    <div class="card-header bg-light fw-bold">{{ chart.title }}</div>
+    <div class="card-body">
+      <div class="chart-container" style="position: relative; height: 360px;">
+        <canvas id="chart-quick"></canvas>
+      </div>
+    </div>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <script>
+    (function() {
+      var config = {{ chart.config_json|safe }};
+      var el = document.getElementById("chart-quick");
+      if (el) new Chart(el.getContext("2d"), config);
+    })();
+  </script>
+  {% elif numeric_cols %}
+  <p class="text-muted">Select a variable and chart type above.</p>
+  {% else %}
+  <p class="text-muted">No numeric variables in this dataset. Add or upload data first.</p>
+  {% endif %}
+</div>
+{% endblock %}

@@ -10,10 +10,10 @@ def index(request):
             "status": "available"
         },
         {
-            "name": "TimeClock System",
-            "description": "Track employee hours and attendance.",
-            "url_name": None,  # Coming soon
-            "status": "coming"
+            "name": "Data Analytics",
+            "description": "Upload Excel/CSV or enter data manually; run analytics and export reports (SPC, capability, t-tests, regression, and more).",
+            "url_name": "dataanalysis:dataset_list",
+            "status": "available"
         },
     ]
     return render(request, "pages/index.html", {"apps": apps})

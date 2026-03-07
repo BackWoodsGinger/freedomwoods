@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}Data Analytics{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="fw-bold text-dark">Data Analytics</h2>
+    <a href="{% url 'dataanalysis:dataset_create' %}" class="btn btn-primary shadow-sm">+ New Dataset</a>
+  </div>
+  <p class="text-muted mb-4">Upload Excel/CSV files or enter records manually, then run analytics (descriptive stats, control charts, capability, t-tests, ANOVA, regression).</p>
+
+  {% if datasets %}
+  <div class="row g-4">
+    {% for ds in datasets %}
+    <div class="col-md-6 col-lg-4">
+      <div class="card h-100 shadow-sm">
+        <div class="card-body d-flex flex-column">
+          <h5 class="card-title fw-bold">{{ ds.name }}</h5>
+          <p class="card-text text-muted small flex-grow-1">{{ ds.description|default:"No description"|truncatewords:12 }}</p>
+          <p class="small text-muted mb-2">
+            Files: {{ ds.files.count }} · Manual records: {{ ds.manual_records.count }}
+          </p>
+          <a href="{% url 'dataanalysis:dataset_detail' ds.pk %}" class="btn btn-outline-primary btn-sm">Open</a>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="text-center text-muted mt-5">
+    <p>No datasets yet. Create one and add data via Excel/CSV upload or manual entry.</p>
+    <a href="{% url 'dataanalysis:dataset_create' %}" class="btn btn-primary mt-2">Create Dataset</a>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

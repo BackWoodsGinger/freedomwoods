@@ -27,7 +27,9 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['home.freedomwoods.online', 'localhost', '127.0.0.1']
 
-
+CSRF_TRUSTED_ORIGINS = [
+    "https://home.freedomwoods.online",
+]
 # Application definition
 
 INSTALLED_APPS = [
@@ -39,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'pages',
     'tickets',
+    'dataanalysis',
     'crispy_forms',
     'crispy_bootstrap5',
 ]
@@ -123,6 +126,10 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
 STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+MEDIA_ROOT = BASE_DIR / "media"
+MEDIA_URL = "/media/"
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 

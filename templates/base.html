@@ -28,6 +28,7 @@
       <ul class="navbar-nav ms-auto">
         <li class="nav-item"><a href="{% url 'index' %}" class="nav-link">Home</a></li>
         <li class="nav-item"><a href="{% url 'tickets:ticket_list' %}" class="nav-link">Help Desk</a></li>
+        <li class="nav-item"><a href="{% url 'dataanalysis:dataset_list' %}" class="nav-link">Data Analytics</a></li>
         {% if user.is_authenticated %}
           <li class="nav-item d-flex align-items-center">
             <form action="{% url 'logout' %}" method="post" class="m-0 p-0">
