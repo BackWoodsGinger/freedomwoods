@@ -15,15 +15,42 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# Path for auto-generated secret key (created on first run if no env var set).
+SECRET_KEY_FILE = BASE_DIR / ".secret_key"
+
+
+def _get_secret_key():
+    """Use DJANGO_SECRET_KEY env, or .secret_key file, or generate and persist one."""
+    key = os.environ.get("DJANGO_SECRET_KEY", "").strip()
+    if key:
+        return key
+    if SECRET_KEY_FILE.exists():
+        return SECRET_KEY_FILE.read_text().strip()
+    # Generate a new key and save it (no env vars needed on server)
+    try:
+        import secrets
+        key = secrets.token_urlsafe(50)
+    except ImportError:
+        import random
+        import base64
+        key = base64.urlsafe_b64encode(
+            bytes(random.getrandbits(8) for _ in range(48))
+        ).decode().rstrip("=")
+    try:
+        SECRET_KEY_FILE.write_text(key)
+        SECRET_KEY_FILE.chmod(0o600)
+    except OSError:
+        pass
+    return key
+
 
 # -----------------------------------------------------------------------------
-# Environment-based configuration (production hardening)
-# Set DJANGO_SECRET_KEY and DJANGO_DEBUG=0 in production. See .env.example.
+# Environment-based configuration (optional; defaults work for production)
 # -----------------------------------------------------------------------------
-_default_secret = "django-insecure-t6kzh4#pb#999a8d6&=)=!$ytp(wz1bf5yi8^q_e-da@3(zm6b"
-SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY", _default_secret)
+SECRET_KEY = _get_secret_key()
 
-DEBUG = os.environ.get("DJANGO_DEBUG", "1").strip().lower() in ("1", "true", "yes")
+# Default DEBUG=0 (production). Set DJANGO_DEBUG=1 for local development.
+DEBUG = os.environ.get("DJANGO_DEBUG", "0").strip().lower() in ("1", "true", "yes")
 
 _raw_hosts = os.environ.get("DJANGO_ALLOWED_HOSTS", "")
 ALLOWED_HOSTS = (
@@ -89,7 +116,8 @@ TEMPLATES = [
 if not DEBUG:
     SECURE_BROWSER_XSS_FILTER = True
     SECURE_CONTENT_TYPE_NOSNIFF = True
-    SECURE_SSL_REDIRECT = os.environ.get("DJANGO_SECURE_SSL_REDIRECT", "1") in ("1", "true", "yes")
+    # Default 0 when behind Cloudflare/tunnel (they do HTTPS). Set to 1 if Django is the TLS terminator.
+    SECURE_SSL_REDIRECT = os.environ.get("DJANGO_SECURE_SSL_REDIRECT", "0") in ("1", "true", "yes")
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
     SECURE_HSTS_SECONDS = 31536000

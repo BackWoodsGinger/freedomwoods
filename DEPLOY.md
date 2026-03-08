@@ -1,30 +1,55 @@
 # Production deployment
 
+## Zero-config option (recommended)
+
+You don’t need to set any environment variables. On first run the app will:
+
+- Create a random **secret key** and save it in `.secret_key` in the project root (so restarts use the same key).
+- Use **DEBUG=0**, **ALLOWED_HOSTS** including `home.freedomwoods.online`, and **SECURE_SSL_REDIRECT=0** (suitable behind Cloudflare Tunnel).
+
+Just pull, install, collect static, and run gunicorn.
+
 ## Checklist before going live
 
-1. **Environment variables** (e.g. in systemd, .env, or your host’s config):
-   - `DJANGO_SECRET_KEY` – long random string (e.g. `python -c "import secrets; print(secrets.token_urlsafe(50))"`).
-   - `DJANGO_DEBUG=0`
-   - `DJANGO_ALLOWED_HOSTS` – comma-separated (e.g. `home.freedomwoods.online`).
-   - `DJANGO_CSRF_TRUSTED_ORIGINS` – comma-separated HTTPS origins (e.g. `https://home.freedomwoods.online`).
+1. **Pull and install**
+   ```bash
+   git pull
+   source venv/bin/activate   # or your venv path
+   pip install -r requirements.txt
+   ```
 
-2. **Static files**: run `python manage.py collectstatic --noinput` and serve the app with gunicorn (WhiteNoise will serve `/static/`).
+2. **Static files**
+   ```bash
+   python manage.py collectstatic --noinput
+   ```
 
-3. **HTTPS**: Use TLS in front of the app (e.g. nginx or Caddy). With `DJANGO_DEBUG=0`, Django sets secure cookies and HSTS.
+3. **Log directory** (optional; for `log/django.log`)
+   ```bash
+   mkdir -p log
+   ```
 
-4. **Logs**: When `DEBUG` is off, logs go to `log/django.log` (create `log/` if needed and ensure the process can write there).
-
-5. **Database**: Default is SQLite. For higher load or multi-process, consider PostgreSQL and set `DATABASES` in settings (e.g. from env).
-
-6. **Run with gunicorn**, e.g.:
+4. **Run with gunicorn**
    ```bash
    gunicorn freedomwoods.wsgi:application --bind 0.0.0.0:8000
    ```
+   Or restart your systemd service if you use one.
 
-## What’s enabled in production (when `DJANGO_DEBUG=0`)
+5. **HTTPS** is handled by Cloudflare (or your reverse proxy). Django is configured for that (secure cookies, no HTTP redirect).
 
-- Secret key and debug from environment (no hardcoded production secret).
+## Optional overrides
+
+Set these only if you need to change defaults (e.g. different domain, or local dev):
+
+- `DJANGO_DEBUG=1` – enable debug mode (local only).
+- `DJANGO_SECRET_KEY` – use this instead of the auto-generated `.secret_key` file.
+- `DJANGO_ALLOWED_HOSTS` – comma-separated hosts (default already includes `home.freedomwoods.online`).
+- `DJANGO_CSRF_TRUSTED_ORIGINS` – comma-separated HTTPS origins.
+- `DJANGO_SECURE_SSL_REDIRECT=1` – if Django terminates TLS (not needed behind Cloudflare Tunnel).
+
+## What’s enabled in production (when DEBUG is off)
+
+- Auto secret key (from env or `.secret_key` file).
 - Security headers: XSS filter, X-Content-Type-Options, HSTS.
-- Secure and HTTP-only behavior for session and CSRF cookies; HTTPS redirect (unless disabled).
+- Secure session and CSRF cookies; no HTTPS redirect when behind a proxy.
 - WhiteNoise serving static files with hashed names.
 - Rotating file logging for errors.
