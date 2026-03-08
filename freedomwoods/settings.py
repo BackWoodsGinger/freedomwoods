@@ -55,6 +55,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'freedomwoods.middleware.NoCacheHtmlMiddleware',
 ]
 
 ROOT_URLCONF = 'freedomwoods.urls'
@@ -71,6 +72,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'pages.context_processors.nav_apps',
+                'pages.context_processors.static_version',
             ],
         },
     },
@@ -127,6 +129,9 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
 STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+# Bump this on deploy to force browsers to load new CSS/JS (avoids cache)
+STATIC_VERSION = '2.1'
 
 MEDIA_ROOT = BASE_DIR / "media"
 MEDIA_URL = "/media/"

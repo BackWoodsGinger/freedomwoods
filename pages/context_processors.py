@@ -1,6 +1,7 @@
 """
 Context processors for global template data (e.g. nav apps list).
 """
+from django.conf import settings
 
 
 def nav_apps(request):
@@ -20,3 +21,8 @@ def nav_apps(request):
         },
     ]
     return {"nav_apps": apps}
+
+
+def static_version(request):
+    """Expose STATIC_VERSION for cache-busting static URLs."""
+    return {"STATIC_VERSION": getattr(settings, "STATIC_VERSION", "1")}

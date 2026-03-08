@@ -1,4 +1,47 @@
 /* -------------------------
+   Theme variables (system: light / dark, default dark)
+   Apple-style glass: strong blur, subtle borders, clear light vs dark
+------------------------- */
+:root,
+[data-theme="dark"] {
+    --bg-overlay: radial-gradient(ellipse 120% 80% at 50% 0%, rgba(40, 40, 45, 0.85), rgba(10, 10, 12, 0.95));
+    --text-primary: #f5f5f7;
+    --text-muted: #a1a1a6;
+    --nav-bg: rgba(28, 28, 30, 0.72);
+    --nav-border: rgba(255, 255, 255, 0.08);
+    --nav-shadow: 0 1px 0 rgba(0, 0, 0, 0.3), 0 4px 24px rgba(0, 0, 0, 0.25);
+    --main-bg: rgba(44, 44, 46, 0.6);
+    --main-shadow: 0 4px 24px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+    --footer-bg: rgba(28, 28, 30, 0.72);
+    --glass-bg: rgba(44, 44, 46, 0.65);
+    --glass-border: rgba(255, 255, 255, 0.1);
+    --hero-glass: rgba(44, 44, 46, 0.5);
+    --hero-content-color: #e8f5e9;
+    --card-text: #f5f5f7;
+    --dropdown-bg: rgba(44, 44, 46, 0.88);
+    --dropdown-border: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="light"] {
+    --bg-overlay: radial-gradient(ellipse 120% 80% at 50% 0%, rgba(255, 255, 255, 0.9), rgba(240, 240, 245, 0.95));
+    --text-primary: #1d1d1f;
+    --text-muted: #6e6e73;
+    --nav-bg: rgba(255, 255, 255, 0.72);
+    --nav-border: rgba(0, 0, 0, 0.06);
+    --nav-shadow: 0 1px 0 rgba(255, 255, 255, 0.8), 0 4px 24px rgba(0, 0, 0, 0.07);
+    --main-bg: rgba(255, 255, 255, 0.65);
+    --main-shadow: 0 4px 24px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.9);
+    --footer-bg: rgba(255, 255, 255, 0.72);
+    --glass-bg: rgba(255, 255, 255, 0.6);
+    --glass-border: rgba(0, 0, 0, 0.06);
+    --hero-glass: rgba(255, 255, 255, 0.5);
+    --hero-content-color: #1a3d1f;
+    --card-text: #1d1d1f;
+    --dropdown-bg: rgba(255, 255, 255, 0.88);
+    --dropdown-border: rgba(0, 0, 0, 0.08);
+}
+
+/* -------------------------
    Body background & overlay
 ------------------------- */
 body {
@@ -9,11 +52,11 @@ body {
     background-attachment: fixed;
     margin: 0;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    color: #fff;
+    color: var(--text-primary);
     overflow-x: hidden;
+    transition: color 0.3s ease;
 }
 
-/* Add a soft light wash over the background */
 body::before {
     content: "";
     position: fixed;
@@ -21,48 +64,67 @@ body::before {
     left: 0;
     width: 100%;
     height: 100%;
-    background: radial-gradient(
-        circle at top left,
-        rgba(255, 255, 255, 0.15),
-        rgba(0, 0, 0, 0.4)
-    );
+    background: var(--bg-overlay);
     z-index: 0;
+    transition: background 0.3s ease;
 }
 
-/* Keep everything above the background */
-main, nav, footer, .container, .hero {
+/* Stacking: background < overlay < hero/main/footer < navbar (so dropdown floats above hero) */
+main, footer, .container, .hero {
     position: relative;
     z-index: 1;
 }
 
-/* -------------------------
-   Frosted glass reusable class
-------------------------- */
-.glass {
-    background: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    backdrop-filter: blur(12px) saturate(180%);
-    -webkit-backdrop-filter: blur(12px) saturate(180%);
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-    border-radius: 20px;
+.navbar {
+    position: relative;
+    z-index: 1050;
+}
+
+.navbar .dropdown-menu {
+    z-index: 1060;
 }
 
 /* -------------------------
-   Navbar (glassified)
+   Apple-style frosted glass
 ------------------------- */
-.navbar {
-    background: rgba(20, 20, 20, 0.4);
+.glass {
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
     backdrop-filter: blur(20px) saturate(180%);
     -webkit-backdrop-filter: blur(20px) saturate(180%);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+    box-shadow: var(--main-shadow);
+    border-radius: 16px;
+    transition: background 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.glass-card {
+    background: var(--main-bg);
+    border: 1px solid var(--glass-border);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border-radius: 12px;
+    box-shadow: var(--main-shadow);
+    color: var(--card-text);
+    transition: background 0.25s ease, color 0.25s ease;
+}
+
+/* -------------------------
+   Navbar (Apple-style glass, above hero so dropdown shows on top)
+------------------------- */
+.navbar {
+    background: var(--nav-bg);
+    backdrop-filter: blur(24px) saturate(180%);
+    -webkit-backdrop-filter: blur(24px) saturate(180%);
+    border-bottom: 1px solid var(--nav-border);
+    box-shadow: var(--nav-shadow);
     padding: 0.75rem 1rem;
+    transition: background 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
 }
 
 .navbar-brand {
     font-weight: 600;
     font-size: 1.3rem;
-    color: #f5f5f7 !important;
+    color: var(--text-primary) !important;
 }
 
 .navbar-brand img {
@@ -74,12 +136,47 @@ main, nav, footer, .container, .hero {
 }
 
 .navbar-nav .nav-link {
-    color: #f8f9fa !important;
+    color: var(--text-primary) !important;
     transition: color 0.3s ease;
 }
 
 .navbar-nav .nav-link:hover {
-    color: #00ff88 !important;
+    color: #00b359 !important;
+}
+
+[data-theme="light"] .navbar-nav .nav-link:hover {
+    color: #007a3d !important;
+}
+
+/* Dropdown: glass, above hero (z-index on .navbar and .dropdown-menu) */
+.navbar .dropdown-menu {
+    background: var(--dropdown-bg);
+    backdrop-filter: blur(24px) saturate(180%);
+    -webkit-backdrop-filter: blur(24px) saturate(180%);
+    border: 1px solid var(--dropdown-border);
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+[data-theme="light"] .navbar .dropdown-menu {
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+
+[data-theme="light"] .navbar-toggler {
+    border-color: rgba(0, 0, 0, 0.2);
+}
+
+[data-theme="light"] .navbar-toggler-icon {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(0, 0, 0, 0.55)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+}
+
+.navbar .dropdown-item {
+    color: var(--text-primary);
+}
+
+.navbar .dropdown-item:hover {
+    background: var(--glass-bg);
+    color: #00b359;
 }
 
 /* -------------------------
@@ -88,29 +185,41 @@ main, nav, footer, .container, .hero {
 .hero {
     position: relative;
     overflow: hidden;
-    height: 400px;
+    height: 280px; /* ↓ reduced from 400px */
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 2rem;
     display: flex;
     justify-content: center;
     align-items: center;
     text-align: center;
+    box-sizing: border-box;
 }
 
 .hero::before {
     content: "";
     position: absolute;
     inset: 0;
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(15px) saturate(180%);
-    -webkit-backdrop-filter: blur(15px) saturate(180%);
-    border-radius: 30px;
+    background: var(--hero-glass);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border-radius: 16px;
     z-index: 0;
-    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.4);
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+    overflow: hidden;
+    transition: background 0.25s ease, box-shadow 0.25s ease;
 }
 
-/* Matrix canvas */
+[data-theme="light"] .hero::before {
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+/* Matrix canvas stays contained */
 #matrixCanvas {
     position: absolute;
     inset: 0;
+    width: 100%;
+    height: 100%;
     z-index: 0;
 }
 
@@ -118,9 +227,10 @@ main, nav, footer, .container, .hero {
 .hero-content {
     position: relative;
     z-index: 1;
-    color: #e8ffe8;
+    color: var(--hero-content-color);
     font-weight: 700;
     padding: 1rem;
+    transition: color 0.3s ease;
 }
 
 .hero-content h1 {
@@ -141,12 +251,13 @@ main, nav, footer, .container, .hero {
 .container {
     margin-top: 2rem;
     padding: 2rem;
-    border-radius: 20px;
-    background: rgba(255, 255, 255, 0.08);
-    backdrop-filter: blur(10px) saturate(180%);
-    -webkit-backdrop-filter: blur(10px) saturate(180%);
-    box-shadow: 0 8px 32px rgba(0,0,0,0.25);
-    color: #fff;
+    border-radius: 16px;
+    background: var(--main-bg);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    box-shadow: var(--main-shadow);
+    color: var(--card-text);
+    transition: background 0.25s ease, box-shadow 0.25s ease, color 0.25s ease;
 }
 
 /* -------------------------
@@ -154,13 +265,56 @@ main, nav, footer, .container, .hero {
 ------------------------- */
 footer {
     margin-top: 2rem;
-    background: rgba(20, 20, 20, 0.4);
-    backdrop-filter: blur(15px);
-    -webkit-backdrop-filter: blur(15px);
-    color: #ddd;
+    background: var(--footer-bg);
+    backdrop-filter: blur(24px) saturate(180%);
+    -webkit-backdrop-filter: blur(24px) saturate(180%);
+    color: var(--text-muted);
     text-align: center;
     padding: 1rem 0;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    border-top: 1px solid var(--nav-border);
+    transition: background 0.25s ease, color 0.25s ease;
+}
+
+/* -------------------------
+   About page (professional developer)
+------------------------- */
+.about-page .about-heading {
+    color: var(--card-text);
+}
+
+.about-page .text-body-secondary {
+    color: var(--text-muted) !important;
+}
+
+.skill-pill {
+    display: inline-block;
+    padding: 0.35rem 0.9rem;
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: 999px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--card-text);
+    transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.skill-pill:hover {
+    background: var(--glass-border);
+}
+
+/* -------------------------
+   Homepage cards (theme-aware)
+------------------------- */
+.container .card {
+    background: var(--main-bg);
+    border: 1px solid var(--glass-border);
+    color: var(--card-text);
+    backdrop-filter: blur(8px);
+}
+
+.container .card-title,
+.container .card-text {
+    color: var(--card-text);
 }
 
 /* -------------------------
@@ -168,7 +322,8 @@ footer {
 ------------------------- */
 @media (max-width: 768px) {
     .hero {
-        height: 280px;
+        height: 220px;
+        padding: 1rem;
     }
 
     .navbar-brand img {
@@ -184,3 +339,4 @@ footer {
         font-size: 0.85rem;
     }
 }
+
