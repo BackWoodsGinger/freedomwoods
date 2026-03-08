@@ -4,18 +4,19 @@
 ------------------------- */
 :root,
 [data-theme="dark"] {
-    --bg-overlay: radial-gradient(ellipse 120% 80% at 50% 0%, rgba(40, 40, 45, 0.85), rgba(10, 10, 12, 0.95));
+    /* Lighter overlay so logo shows through */
+    --bg-overlay: radial-gradient(ellipse 120% 80% at 50% 0%, rgba(30, 30, 35, 0.45), rgba(15, 15, 18, 0.6));
     --text-primary: #f5f5f7;
     --text-muted: #a1a1a6;
-    --nav-bg: rgba(28, 28, 30, 0.72);
+    --nav-bg: rgba(28, 28, 30, 0.65);
     --nav-border: rgba(255, 255, 255, 0.08);
-    --nav-shadow: 0 1px 0 rgba(0, 0, 0, 0.3), 0 4px 24px rgba(0, 0, 0, 0.25);
-    --main-bg: rgba(44, 44, 46, 0.6);
-    --main-shadow: 0 4px 24px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.06);
-    --footer-bg: rgba(28, 28, 30, 0.72);
-    --glass-bg: rgba(44, 44, 46, 0.65);
+    --nav-shadow: 0 1px 0 rgba(0, 0, 0, 0.2), 0 4px 24px rgba(0, 0, 0, 0.2);
+    --main-bg: rgba(44, 44, 46, 0.45);
+    --main-shadow: 0 4px 24px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+    --footer-bg: rgba(28, 28, 30, 0.6);
+    --glass-bg: rgba(44, 44, 46, 0.5);
     --glass-border: rgba(255, 255, 255, 0.1);
-    --hero-glass: rgba(44, 44, 46, 0.5);
+    --hero-glass: rgba(44, 44, 46, 0.4);
     --hero-content-color: #e8f5e9;
     --card-text: #f5f5f7;
     --dropdown-bg: rgba(44, 44, 46, 0.88);
@@ -23,18 +24,19 @@
 }
 
 [data-theme="light"] {
-    --bg-overlay: radial-gradient(ellipse 120% 80% at 50% 0%, rgba(255, 255, 255, 0.9), rgba(240, 240, 245, 0.95));
+    /* Lighter overlay so logo shows through */
+    --bg-overlay: radial-gradient(ellipse 120% 80% at 50% 0%, rgba(255, 255, 255, 0.55), rgba(248, 248, 252, 0.65));
     --text-primary: #1d1d1f;
     --text-muted: #6e6e73;
-    --nav-bg: rgba(255, 255, 255, 0.72);
+    --nav-bg: rgba(255, 255, 255, 0.65);
     --nav-border: rgba(0, 0, 0, 0.06);
-    --nav-shadow: 0 1px 0 rgba(255, 255, 255, 0.8), 0 4px 24px rgba(0, 0, 0, 0.07);
-    --main-bg: rgba(255, 255, 255, 0.65);
-    --main-shadow: 0 4px 24px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.9);
-    --footer-bg: rgba(255, 255, 255, 0.72);
-    --glass-bg: rgba(255, 255, 255, 0.6);
+    --nav-shadow: 0 1px 0 rgba(255, 255, 255, 0.8), 0 4px 24px rgba(0, 0, 0, 0.06);
+    --main-bg: rgba(255, 255, 255, 0.5);
+    --main-shadow: 0 4px 24px rgba(0, 0, 0, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.9);
+    --footer-bg: rgba(255, 255, 255, 0.6);
+    --glass-bg: rgba(255, 255, 255, 0.5);
     --glass-border: rgba(0, 0, 0, 0.06);
-    --hero-glass: rgba(255, 255, 255, 0.5);
+    --hero-glass: rgba(255, 255, 255, 0.4);
     --hero-content-color: #1a3d1f;
     --card-text: #1d1d1f;
     --dropdown-bg: rgba(255, 255, 255, 0.88);
@@ -260,6 +262,20 @@ main, footer, .container, .hero {
     transition: background 0.25s ease, box-shadow 0.25s ease, color 0.25s ease;
 }
 
+/* Force theme text color so dark theme is never black/camouflaged */
+.container h1,
+.container h2,
+.container h3,
+.container h4,
+.container h5,
+.container h6,
+.container p,
+.container .card-title,
+.container .card-text,
+.container .lead {
+    color: var(--card-text) !important;
+}
+
 /* -------------------------
    Footer (minimal glass)
 ------------------------- */
@@ -303,18 +319,32 @@ footer {
 }
 
 /* -------------------------
-   Homepage cards (theme-aware)
+   Homepage cards (theme-aware, spaced out)
 ------------------------- */
+.projects-row {
+    --bs-gutter-x: 2.5rem;
+    --bs-gutter-y: 2.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.projects-row .col {
+    margin-bottom: 0.5rem;
+}
+
 .container .card {
     background: var(--main-bg);
     border: 1px solid var(--glass-border);
     color: var(--card-text);
-    backdrop-filter: blur(8px);
+    backdrop-filter: blur(12px);
 }
 
 .container .card-title,
 .container .card-text {
-    color: var(--card-text);
+    color: var(--card-text) !important;
+}
+
+.container .card .btn-primary {
+    color: #fff;
 }
 
 /* -------------------------
