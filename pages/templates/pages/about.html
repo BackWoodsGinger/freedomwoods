@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}About | Freedom Woods Development{% endblock %}
+
+{% block hero_content %}
+<h1 class="display-4 fw-bold">About</h1>
+<p class="lead">Developer &amp; creator behind Freedom Woods Development</p>
+{% endblock %}
+
+{% block content %}
+<div class="about-page">
+  <section class="about-intro glass mb-4 p-4 p-lg-5">
+    <div class="row align-items-center">
+      <div class="col-lg-8">
+        <h2 class="h3 mb-3 about-heading">Hi, I'm the developer behind Freedom Woods.</h2>
+        <p class="lead text-body-secondary mb-0">
+          I've been building web applications and studying software development for over five years,
+          with a focus on <strong>Python</strong>, <strong>Django</strong>, and <strong>Bootstrap</strong>.
+          So far my work has been primarily private projects—this site is my professional home and a place
+          to showcase what I build. I'm open to new opportunities and collaboration.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="about-skills glass mb-4 p-4 p-lg-5">
+    <h2 class="h4 mb-4 about-heading">Tech &amp; approach</h2>
+    <ul class="skills-list list-unstyled row g-3">
+      <li class="col-md-6 col-lg-4">
+        <span class="skill-pill">Python</span>
+      </li>
+      <li class="col-md-6 col-lg-4">
+        <span class="skill-pill">Django</span>
+      </li>
+      <li class="col-md-6 col-lg-4">
+        <span class="skill-pill">Bootstrap</span>
+      </li>
+      <li class="col-md-6 col-lg-4">
+        <span class="skill-pill">HTML / CSS / JavaScript</span>
+      </li>
+      <li class="col-md-6 col-lg-4">
+        <span class="skill-pill">SQL &amp; data</span>
+      </li>
+      <li class="col-md-6 col-lg-4">
+        <span class="skill-pill">UI &amp; UX</span>
+      </li>
+    </ul>
+    <p class="text-body-secondary mb-0 mt-3">
+      I care about clean, maintainable code and interfaces that are clear and pleasant to use.
+      The apps on this site (help desk ticketing, data analytics, and others) reflect that focus.
+    </p>
+  </section>
+
+  <section class="about-cta glass p-4 p-lg-5 text-center">
+    <h2 class="h4 mb-3 about-heading">Get in touch</h2>
+    <p class="text-body-secondary mb-4">
+      Interested in working together or discussing a project? I'd be glad to hear from you.
+    </p>
+    <p class="mb-0">
+      <a href="{% url 'index' %}" class="btn btn-primary">Back to Home</a>
+      <a href="{% url 'index' %}#projects" class="btn btn-outline-secondary ms-2">View Apps</a>
+    </p>
+  </section>
+</div>
+{% endblock %}
