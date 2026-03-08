@@ -1,13 +1,24 @@
-asgiref==3.10.0
-crispy-bootstrap5==2025.6
-Django==5.2.7
-django-crispy-forms==2.4
-gunicorn==23.0.0
-packaging==25.0
-sqlparse==0.5.3
-pandas>=2.0
+# Red Hat / server install (use the venv gunicorn uses):
+#   1. Do NOT run "pip install --upgrade pip" if it causes errors.
+#   2. sudo dnf install python3-devel gcc gcc-c++  (for building pandas/numpy)
+#   3. pip install -r requirements-core.txt   (get site running first)
+#   4. pip install -r requirements.txt        (add Data Analytics deps)
+# If step 4 fails, install data packages one by one: pip install pandas numpy openpyxl scipy reportlab matplotlib pyarrow
+
+# Core (same as requirements-core.txt)
+Django>=4.2,<6
+gunicorn>=22
+django-crispy-forms>=2.4
+crispy-bootstrap5>=2024.1
+asgiref>=3.7
+sqlparse>=0.4
+packaging>=23
+
+# Data Analytics app (loose versions for easier install)
+numpy>=1.22
+pandas>=1.5
 openpyxl>=3.0
-pyarrow>=14.0
-scipy>=1.10
+scipy>=1.9
 reportlab>=4.0
 matplotlib>=3.5
+pyarrow>=12.0

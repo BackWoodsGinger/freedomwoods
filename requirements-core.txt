@@ -1,0 +1,13 @@
+# Minimal install: Django + gunicorn + crispy only.
+# Use this first on the server if full requirements.txt fails:
+#   pip install -r requirements-core.txt
+# Then start gunicorn. Data Analytics will error until you install the rest;
+# then: pip install -r requirements.txt  (or install data packages one by one)
+
+Django>=4.2,<6
+gunicorn>=22
+django-crispy-forms>=2.4
+crispy-bootstrap5>=2024.1
+asgiref>=3.7
+sqlparse>=0.4
+packaging>=23
