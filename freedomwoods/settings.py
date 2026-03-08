@@ -16,20 +16,24 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
+# -----------------------------------------------------------------------------
+# Environment-based configuration (production hardening)
+# Set DJANGO_SECRET_KEY and DJANGO_DEBUG=0 in production. See .env.example.
+# -----------------------------------------------------------------------------
+_default_secret = "django-insecure-t6kzh4#pb#999a8d6&=)=!$ytp(wz1bf5yi8^q_e-da@3(zm6b"
+SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY", _default_secret)
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-t6kzh4#pb#999a8d6&=)=!$ytp(wz1bf5yi8^q_e-da@3(zm6b'
+DEBUG = os.environ.get("DJANGO_DEBUG", "1").strip().lower() in ("1", "true", "yes")
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+_raw_hosts = os.environ.get("DJANGO_ALLOWED_HOSTS", "")
+ALLOWED_HOSTS = (
+    [h.strip() for h in _raw_hosts.split(",") if h.strip()]
+    if _raw_hosts
+    else ["home.freedomwoods.online", "localhost", "127.0.0.1"]
+)
 
-ALLOWED_HOSTS = ['home.freedomwoods.online', 'localhost', '127.0.0.1']
-
-CSRF_TRUSTED_ORIGINS = [
-    "https://home.freedomwoods.online",
-]
+_raw_origins = os.environ.get("DJANGO_CSRF_TRUSTED_ORIGINS", "https://home.freedomwoods.online")
+CSRF_TRUSTED_ORIGINS = [o.strip() for o in _raw_origins.split(",") if o.strip()]
 # Application definition
 
 INSTALLED_APPS = [
@@ -49,6 +53,7 @@ CRISPY_ALLOWED_TEMPLATE_PACKS = 'bootstrap5'
 CRISPY_TEMPLATE_PACK = 'bootstrap5'
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -65,8 +70,8 @@ TEMPLATES = [
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
-'OPTIONS': {
-                'context_processors': [
+        'OPTIONS': {
+            'context_processors': [
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
@@ -77,6 +82,19 @@ TEMPLATES = [
         },
     },
 ]
+
+# -----------------------------------------------------------------------------
+# Production security (when DEBUG is False)
+# -----------------------------------------------------------------------------
+if not DEBUG:
+    SECURE_BROWSER_XSS_FILTER = True
+    SECURE_CONTENT_TYPE_NOSNIFF = True
+    SECURE_SSL_REDIRECT = os.environ.get("DJANGO_SECURE_SSL_REDIRECT", "1") in ("1", "true", "yes")
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    SECURE_HSTS_SECONDS = 31536000
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_HSTS_PRELOAD = True
 
 WSGI_APPLICATION = 'freedomwoods.wsgi.application'
 
@@ -129,6 +147,9 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
 STATIC_ROOT = BASE_DIR / 'staticfiles'
+# WhiteNoise: in production, serve static files and use hashed names for cache busting
+if not DEBUG:
+    STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 # Bump this on deploy to force browsers to load new CSS/JS (avoids cache)
 STATIC_VERSION = '2.1'
@@ -140,7 +161,60 @@ MEDIA_URL = "/media/"
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-# settings.py
-LOGIN_URL = '/login/'               # redirect here if not logged in
-LOGIN_REDIRECT_URL = '/'            # redirect here after login
-LOGOUT_REDIRECT_URL = '/'           # optional, after logout
+
+# Auth
+LOGIN_URL = '/login/'
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'
+
+# -----------------------------------------------------------------------------
+# Logging (production: errors to file; development: console)
+# -----------------------------------------------------------------------------
+LOG_DIR = BASE_DIR / "log"
+if not DEBUG and not LOG_DIR.exists():
+    try:
+        LOG_DIR.mkdir(parents=False, exist_ok=True)
+    except OSError:
+        LOG_DIR = None
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "formatters": {
+        "verbose": {
+            "format": "{asctime} {levelname} {name} {message}",
+            "style": "{",
+        },
+        "simple": {
+            "format": "{levelname} {message}",
+            "style": "{",
+        },
+    },
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+            "formatter": "simple",
+        },
+    },
+    "root": {
+        "handlers": ["console"],
+        "level": "INFO",
+    },
+}
+
+if not DEBUG and LOG_DIR:
+    LOGGING["handlers"]["file"] = {
+        "class": "logging.handlers.RotatingFileHandler",
+        "filename": LOG_DIR / "django.log",
+        "maxBytes": 1024 * 1024 * 5,
+        "backupCount": 3,
+        "formatter": "verbose",
+    }
+    LOGGING["root"]["handlers"].append("file")
+    LOGGING["loggers"] = {
+        "django.request": {
+            "handlers": ["file", "console"],
+            "level": "ERROR",
+            "propagate": False,
+        },
+    }
