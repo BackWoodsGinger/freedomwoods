@@ -6,6 +6,7 @@
 # If step 4 fails, install data packages one by one: pip install pandas numpy openpyxl scipy reportlab matplotlib pyarrow
 
 # Core (same as requirements-core.txt)
+python-dotenv>=1.0
 Django>=4.2,<6
 gunicorn>=22
 whitenoise>=6.6

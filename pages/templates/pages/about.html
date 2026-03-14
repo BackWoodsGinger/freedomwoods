@@ -2,22 +2,39 @@
 {% load static %}
 {% block title %}About | Freedom Woods Development{% endblock %}
 
-{% block hero_content %}
-<h1 class="display-4 fw-bold">About</h1>
-<p class="lead">Developer &amp; creator behind Freedom Woods Development</p>
+{% block hero %}
+<div class="about-matrix-bg" aria-hidden="true">
+  <canvas id="matrixCanvas"></canvas>
+</div>
+<div class="about-hero-content">
+  <h1 class="display-4 fw-bold">About</h1>
+  <p class="lead">Developer &amp; creator behind Freedom Woods Development</p>
+</div>
 {% endblock %}
 
 {% block content %}
 <div class="about-page">
   <section class="about-intro glass mb-4 p-4 p-lg-5">
     <div class="row align-items-center">
-      <div class="col-lg-8">
-        <h2 class="h3 mb-3 about-heading">Hi, my name is Eric Wallace and I am the developer behind Freedom Woods.</h2>
-        <p class="lead text-body-secondary mb-0">
+      <div class="col-md-4 col-lg-3 text-center text-md-start mb-4 mb-md-0">
+        <div class="about-intro-oval">
+          <img src="{% static 'images/IMG_4507.webp' %}" alt="Eric Wallace" class="about-intro-img">
+        </div>
+      </div>
+      <div class="col-md-8 col-lg-9">
+        <h2 class="h3 mb-4 about-heading">I'm Eric Wallace and this is Freedom Woods Development</h2>
+        <p class="lead text-body-secondary">
           I've been building web applications and studying software development for over five years,
           with a focus on <strong>Python</strong>, <strong>Django</strong>, and <strong>Bootstrap</strong>.
           So far my work has been primarily private projects—this site is my professional home and a place
-          to showcase what I build. I'm open to new opportunities and collaboration.
+          to showcase what I build.
+        </p>
+        <p class="text-body-secondary">
+          I'm open to new opportunities and collaboration. If you have a business problem that could be
+          solved with a custom web app, internal tool, or streamlined workflow—whether it's ticketing systems,
+          data dashboards, reporting, or something else—I'd like to hear from you. I enjoy turning messy
+          processes into clear, reliable software and am happy to discuss project ideas, scope, and how we
+          might work together to build solutions that fit your needs.
         </p>
       </div>
     </div>
@@ -25,39 +42,67 @@
 
   <section class="about-skills glass mb-4 p-4 p-lg-5">
     <h2 class="h4 mb-4 about-heading">Tech &amp; approach</h2>
-    <ul class="skills-list list-unstyled row g-3">
-      <li class="col-md-6 col-lg-4">
-        <span class="skill-pill">Python</span>
-      </li>
-      <li class="col-md-6 col-lg-4">
-        <span class="skill-pill">Django</span>
-      </li>
-      <li class="col-md-6 col-lg-4">
-        <span class="skill-pill">Bootstrap</span>
-      </li>
-      <li class="col-md-6 col-lg-4">
-        <span class="skill-pill">HTML / CSS / JavaScript</span>
-      </li>
-      <li class="col-md-6 col-lg-4">
-        <span class="skill-pill">SQL &amp; data</span>
-      </li>
-      <li class="col-md-6 col-lg-4">
-        <span class="skill-pill">UI &amp; UX</span>
-      </li>
-    </ul>
-    <p class="text-body-secondary mb-0 mt-3">
+    <p class="text-body-secondary mb-4 about-text-full">
       I care about clean, maintainable code and interfaces that are clear and pleasant to use.
       The apps on this site (help desk ticketing, data analytics, and others) reflect that focus.
     </p>
+    <div class="skills-logos-grid">
+      <div class="skill-logo-item skill-float-1">
+        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/python/python-original.svg" alt="Python" class="skill-logo-img" width="64" height="64">
+        <span class="skill-logo-label">Python</span>
+      </div>
+      <div class="skill-logo-item skill-float-2">
+        <span class="skill-logo-img-wrap logo-light-bg"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/django/django-plain.svg" alt="Django" class="skill-logo-img" width="64" height="64"></span>
+        <span class="skill-logo-label">Django</span>
+      </div>
+      <div class="skill-logo-item skill-float-3">
+        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/bootstrap/bootstrap-original.svg" alt="Bootstrap" class="skill-logo-img" width="64" height="64">
+        <span class="skill-logo-label">Bootstrap</span>
+      </div>
+      <div class="skill-logo-item skill-float-4">
+        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/html5/html5-original.svg" alt="HTML5" class="skill-logo-img" width="64" height="64">
+        <span class="skill-logo-label">HTML5</span>
+      </div>
+      <div class="skill-logo-item skill-float-5">
+        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/css3/css3-original.svg" alt="CSS3" class="skill-logo-img" width="64" height="64">
+        <span class="skill-logo-label">CSS3</span>
+      </div>
+      <div class="skill-logo-item skill-float-6">
+        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/javascript/javascript-original.svg" alt="JavaScript" class="skill-logo-img" width="64" height="64">
+        <span class="skill-logo-label">JavaScript</span>
+      </div>
+      <div class="skill-logo-item skill-float-1">
+        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/postgresql/postgresql-original.svg" alt="PostgreSQL" class="skill-logo-img" width="64" height="64">
+        <span class="skill-logo-label">PostgreSQL</span>
+      </div>
+      <div class="skill-logo-item skill-float-2">
+        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/mysql/mysql-original.svg" alt="MySQL" class="skill-logo-img" width="64" height="64">
+        <span class="skill-logo-label">MySQL</span>
+      </div>
+      <div class="skill-logo-item skill-float-3">
+        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/mongodb/mongodb-original.svg" alt="MongoDB" class="skill-logo-img" width="64" height="64">
+        <span class="skill-logo-label">MongoDB</span>
+      </div>
+      <div class="skill-logo-item skill-float-4">
+        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/android/android-original.svg" alt="Android" class="skill-logo-img" width="64" height="64">
+        <span class="skill-logo-label">Android / Java</span>
+      </div>
+      <div class="skill-logo-item skill-float-5">
+        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/figma/figma-original.svg" alt="UI/UX" class="skill-logo-img" width="64" height="64">
+        <span class="skill-logo-label">UI &amp; UX</span>
+      </div>
+    </div>
   </section>
 
   <section class="about-cta glass p-4 p-lg-5 text-center">
     <h2 class="h4 mb-3 about-heading">Get in touch</h2>
-    <p class="text-body-secondary mb-4">
-      Interested in working together or discussing a project? I'd be glad to hear from you.
+    <p class="text-body-secondary mb-4 about-text-full mx-auto">
+      Interested in working together or discussing a project? Whether you need a one-off app to solve
+      a specific business problem or a longer-term partnership, I'd be glad to hear from you.
     </p>
     <p class="mb-0">
       <a href="{% url 'index' %}" class="btn btn-primary">Back to Home</a>
+      <a href="{% url 'contact' %}" class="btn btn-outline-primary ms-2">Contact</a>
       <a href="{% url 'index' %}#projects" class="btn btn-outline-secondary ms-2">View Apps</a>
     </p>
   </section>

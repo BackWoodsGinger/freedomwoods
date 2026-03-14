@@ -7,6 +7,36 @@
 {% endblock %}
 
 {% block content %}
+<!-- Single jumbotron: all technologies with logos, JS scroll right-to-left -->
+<section class="tech-jumbotron glass mb-5">
+  <h2 class="tech-jumbotron-title">Frameworks I Work With</h2>
+  <div class="tech-jumbotron-scroll-wrap">
+    <div id="techJumbotronTrack" class="tech-jumbotron-track">
+      <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/python/python-original.svg" alt="Python" class="tech-jumbotron-logo" width="120" height="120">
+      <span class="tech-jumbotron-logo-wrap logo-light-bg"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/django/django-plain.svg" alt="Django" class="tech-jumbotron-logo" width="120" height="120"></span>
+      <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/javascript/javascript-original.svg" alt="JavaScript" class="tech-jumbotron-logo" width="120" height="120">
+      <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/html5/html5-original.svg" alt="HTML5" class="tech-jumbotron-logo" width="120" height="120">
+      <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/css3/css3-original.svg" alt="CSS3" class="tech-jumbotron-logo" width="120" height="120">
+      <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/bootstrap/bootstrap-original.svg" alt="Bootstrap" class="tech-jumbotron-logo" width="120" height="120">
+      <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/postgresql/postgresql-original.svg" alt="PostgreSQL" class="tech-jumbotron-logo" width="120" height="120">
+      <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/mysql/mysql-original.svg" alt="MySQL" class="tech-jumbotron-logo" width="120" height="120">
+      <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/mongodb/mongodb-original.svg" alt="MongoDB" class="tech-jumbotron-logo" width="120" height="120">
+      <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/android/android-original.svg" alt="Android" class="tech-jumbotron-logo" width="120" height="120">
+      <!-- duplicate set for seamless loop -->
+      <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/python/python-original.svg" alt="Python" class="tech-jumbotron-logo" width="120" height="120">
+      <span class="tech-jumbotron-logo-wrap logo-light-bg"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/django/django-plain.svg" alt="Django" class="tech-jumbotron-logo" width="120" height="120"></span>
+      <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/javascript/javascript-original.svg" alt="JavaScript" class="tech-jumbotron-logo" width="120" height="120">
+      <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/html5/html5-original.svg" alt="HTML5" class="tech-jumbotron-logo" width="120" height="120">
+      <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/css3/css3-original.svg" alt="CSS3" class="tech-jumbotron-logo" width="120" height="120">
+      <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/bootstrap/bootstrap-original.svg" alt="Bootstrap" class="tech-jumbotron-logo" width="120" height="120">
+      <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/postgresql/postgresql-original.svg" alt="PostgreSQL" class="tech-jumbotron-logo" width="120" height="120">
+      <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/mysql/mysql-original.svg" alt="MySQL" class="tech-jumbotron-logo" width="120" height="120">
+      <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/mongodb/mongodb-original.svg" alt="MongoDB" class="tech-jumbotron-logo" width="120" height="120">
+      <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/android/android-original.svg" alt="Android" class="tech-jumbotron-logo" width="120" height="120">
+    </div>
+  </div>
+</section>
+
 <h2 class="text-center mb-4" id="projects">Our Projects</h2>
 <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 projects-row">
   {% for app in apps %}

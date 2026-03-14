@@ -15,6 +15,15 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# Load .env from project root if present (for EMAIL_* and other secrets on server).
+_env_file = BASE_DIR / ".env"
+if _env_file.exists():
+    try:
+        from dotenv import load_dotenv
+        load_dotenv(_env_file)
+    except ImportError:
+        pass
+
 # Path for auto-generated secret key (created on first run if no env var set).
 SECRET_KEY_FILE = BASE_DIR / ".secret_key"
 
@@ -194,6 +203,19 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
+
+# -----------------------------------------------------------------------------
+# Email (contact form → Gmail). Set in env: EMAIL_HOST_USER, EMAIL_HOST_PASSWORD, CONTACT_EMAIL
+# For Gmail use an App Password: https://myaccount.google.com/apppasswords
+# -----------------------------------------------------------------------------
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = os.environ.get("EMAIL_HOST", "smtp.gmail.com")
+EMAIL_PORT = int(os.environ.get("EMAIL_PORT", "587"))
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER", "")
+EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD", "")
+CONTACT_EMAIL = os.environ.get("CONTACT_EMAIL", EMAIL_HOST_USER)  # Where contact form submissions go
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER or "noreply@freedomwoods.online"
 
 # -----------------------------------------------------------------------------
 # Logging (production: errors to file; development: console)

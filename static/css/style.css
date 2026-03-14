@@ -44,9 +44,16 @@
 }
 
 /* -------------------------
-   Body background & overlay
+   Body background & overlay / sticky footer
 ------------------------- */
+html {
+    min-height: 100%;
+}
+
 body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
     background-image: url("../images/logo.webp");
     background-size: contain;
     background-position: center;
@@ -57,6 +64,11 @@ body {
     color: var(--text-primary);
     overflow-x: hidden;
     transition: color 0.3s ease;
+}
+
+/* Main grows to fill space so footer stays at bottom */
+main {
+    flex: 1 0 auto;
 }
 
 body::before {
@@ -182,20 +194,22 @@ main, footer, .container, .hero {
 }
 
 /* -------------------------
-   Hero Section (animated glass)
+   Hero Section (animated glass) — full width of page
 ------------------------- */
 .hero {
     position: relative;
     overflow: hidden;
-    height: 280px; /* ↓ reduced from 400px */
-    max-width: 100%;
-    margin: 0 auto;
+    width: 100%;
+    min-width: 100%;
+    height: 280px;
+    margin: 0;
     padding: 2rem;
     display: flex;
     justify-content: center;
     align-items: center;
     text-align: center;
     box-sizing: border-box;
+    flex-shrink: 0;
 }
 
 .hero::before {
@@ -216,13 +230,52 @@ main, footer, .container, .hero {
     box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.8);
 }
 
-/* Matrix canvas stays contained */
+/* Matrix canvas stays contained (hero or about full-page) */
 #matrixCanvas {
     position: absolute;
     inset: 0;
     width: 100%;
     height: 100%;
     z-index: 0;
+}
+
+/* About page: full-viewport matrix background */
+.about-matrix-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    pointer-events: none;
+}
+
+.about-matrix-bg #matrixCanvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.about-hero-content {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    padding: 2rem 1rem;
+    color: var(--hero-content-color);
+}
+
+.about-hero-content h1 {
+    font-size: clamp(1.8rem, 5vw, 3rem);
+    background: linear-gradient(90deg, #00ff99, #00ccff, #00ff99);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.about-hero-content .lead {
+    font-size: clamp(1rem, 3vw, 1.25rem);
+    opacity: 0.9;
 }
 
 /* Hero content above the blur */
@@ -280,7 +333,8 @@ main, footer, .container, .hero {
    Footer (minimal glass)
 ------------------------- */
 footer {
-    margin-top: 2rem;
+    flex-shrink: 0;
+    margin-top: auto;
     background: var(--footer-bg);
     backdrop-filter: blur(24px) saturate(180%);
     -webkit-backdrop-filter: blur(24px) saturate(180%);
@@ -294,6 +348,29 @@ footer {
 /* -------------------------
    About page (professional developer)
 ------------------------- */
+/* About intro: oval portrait frame — image keeps aspect ratio, no squishing */
+.about-intro-oval {
+    display: inline-block;
+    width: 240px;
+    height: 300px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 3px solid var(--glass-border);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    position: relative;
+}
+
+.about-intro-img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center center;
+    display: block;
+    filter: grayscale(100%);
+}
+
 .about-page .about-heading {
     color: var(--card-text);
 }
@@ -316,6 +393,166 @@ footer {
 
 .skill-pill:hover {
     background: var(--glass-border);
+}
+
+/* About: Tech & approach — logos with float animation (opaque, move around) */
+.skills-logos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 1.75rem;
+    align-items: center;
+    justify-items: center;
+}
+
+.skill-logo-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    opacity: 1;
+}
+
+.skill-logo-img {
+    width: 88px;
+    height: 88px;
+    object-fit: contain;
+    opacity: 1;
+}
+
+.skill-logo-label {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--card-text);
+}
+
+/* Float/drift animations — logos move more noticeably */
+.skill-float-1 { animation: skill-float-1 6s ease-in-out infinite; }
+.skill-float-2 { animation: skill-float-2 7s ease-in-out infinite; }
+.skill-float-3 { animation: skill-float-3 5.5s ease-in-out infinite; }
+.skill-float-4 { animation: skill-float-4 8s ease-in-out infinite; }
+.skill-float-5 { animation: skill-float-5 6.5s ease-in-out infinite; }
+.skill-float-6 { animation: skill-float-6 7.5s ease-in-out infinite; }
+
+@keyframes skill-float-1 {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    25% { transform: translate(12px, -14px) scale(1.06); }
+    50% { transform: translate(-10px, 10px) scale(0.96); }
+    75% { transform: translate(14px, 8px) scale(1.04); }
+}
+
+@keyframes skill-float-2 {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    33% { transform: translate(-14px, 10px) scale(1.04); }
+    66% { transform: translate(10px, -12px) scale(0.97); }
+}
+
+@keyframes skill-float-3 {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    25% { transform: translate(-12px, -12px) scale(1.06); }
+    50% { transform: translate(16px, 8px) scale(0.95); }
+    75% { transform: translate(-8px, 14px) scale(1.03); }
+}
+
+@keyframes skill-float-4 {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    50% { transform: translate(14px, -10px) scale(1.05); }
+}
+
+@keyframes skill-float-5 {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    33% { transform: translate(10px, 14px) scale(0.96); }
+    66% { transform: translate(-14px, -8px) scale(1.06); }
+}
+
+@keyframes skill-float-6 {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    25% { transform: translate(-12px, 10px) scale(1.02); }
+    50% { transform: translate(10px, -12px) scale(1.05); }
+    75% { transform: translate(-8px, -10px) scale(0.97); }
+}
+
+/* -------------------------
+   Home: single tech jumbotron (logos, JS scroll right-to-left)
+------------------------- */
+.tech-jumbotron {
+    padding: 1.5rem 0;
+    overflow: hidden;
+    border-radius: 16px;
+}
+
+.tech-jumbotron-title {
+    text-align: center;
+    margin-bottom: 1.25rem;
+    font-size: 1.5rem;
+    color: var(--card-text) !important;
+}
+
+.tech-jumbotron-scroll-wrap {
+    overflow: hidden;
+    width: 100%;
+    mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
+    -webkit-mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
+}
+
+.tech-jumbotron-track {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: center;
+    width: max-content;
+    will-change: transform;
+}
+
+.tech-jumbotron-track .tech-jumbotron-logo {
+    flex-shrink: 0;
+    width: 120px;
+    height: 120px;
+    margin-right: 6rem;
+    object-fit: contain;
+    display: block;
+    opacity: 1;
+    filter: grayscale(100%) brightness(0.92) contrast(1.05);
+    transition: filter 0.2s ease;
+}
+
+.tech-jumbotron-track .tech-jumbotron-logo:hover {
+    filter: grayscale(60%) brightness(1) contrast(1.05);
+}
+
+/* Wrapper for logos that need a light background (e.g. Django on dark theme) */
+.tech-jumbotron-logo-wrap {
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 6rem;
+}
+
+.tech-jumbotron-logo-wrap.logo-light-bg {
+    background: #ffffff;
+    padding: 0.75rem 1rem;
+    border-radius: 14px;
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.08);
+}
+
+/* Brighten Django icon so dark green is visible on white */
+.tech-jumbotron-logo-wrap.logo-light-bg .tech-jumbotron-logo {
+    filter: grayscale(100%) brightness(0.35) contrast(2.5);
+}
+.tech-jumbotron-logo-wrap.logo-light-bg .tech-jumbotron-logo:hover {
+    filter: grayscale(80%) brightness(0.4) contrast(2.2);
+}
+
+.skill-logo-img-wrap.logo-light-bg {
+    display: inline-flex;
+    background: #ffffff;
+    padding: 0.5rem 0.75rem;
+    border-radius: 12px;
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1);
+}
+
+.skill-logo-img-wrap.logo-light-bg .skill-logo-img {
+    filter: brightness(0.35) contrast(2.2);
 }
 
 /* -------------------------

@@ -2,10 +2,16 @@
 
 document.addEventListener('DOMContentLoaded', () => {
     const canvas = document.getElementById('matrixCanvas');
+    if (!canvas) return;
+
     const context = canvas.getContext('2d');
 
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
+    function resize() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+    }
+    resize();
+    window.addEventListener('resize', resize);
 
     const binary = '01';
     const fontSize = 16;
