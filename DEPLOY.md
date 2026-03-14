@@ -55,6 +55,19 @@ To have contact form submissions emailed to you on the server:
 
 After this, when someone submits the contact form, you’ll receive the message at `CONTACT_EMAIL` (your Gmail).
 
+**If you see "Email not configured. Please set CONTACT_EMAIL or EMAIL_HOST_USER":**
+
+1. **`.env` location** — It must be in the **project root**: the same folder that contains `manage.py` (and the `freedomwoods` package folder). From that folder, run `ls -la .env` to confirm the file exists.
+2. **Install python-dotenv** — The app needs it to read `.env`. On the server run: `pip install -r requirements.txt` (or `pip install python-dotenv`).
+3. **`.env` format** — One variable per line, no spaces around `=`. Example:
+   ```
+   EMAIL_HOST_USER=yourname@gmail.com
+   EMAIL_HOST_PASSWORD=abcdefghijklmnop
+   CONTACT_EMAIL=yourname@gmail.com
+   ```
+   (Remove any spaces in the App Password when pasting.)
+4. **Restart the app** — After creating or editing `.env`, restart gunicorn (or your process manager) so Django loads the new values.
+
 ## Checklist before going live
 
 1. **Pull and install**

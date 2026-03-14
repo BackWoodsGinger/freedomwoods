@@ -37,7 +37,10 @@
   </div>
 </section>
 
-<h2 class="text-center mb-4" id="projects">Our Projects</h2>
+<h2 class="text-center mb-4" id="projects">My Projects</h2>
+<p class="text-center text-body-secondary mb-4">
+  If you would like access to test these applications, use the <a href="{% url 'contact' %}">registration link</a> to get in touch and we’ll set you up.
+</p>
 <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 projects-row">
   {% for app in apps %}
   <div class="col">

@@ -16,13 +16,16 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Load .env from project root if present (for EMAIL_* and other secrets on server).
-_env_file = BASE_DIR / ".env"
-if _env_file.exists():
-    try:
-        from dotenv import load_dotenv
+try:
+    from dotenv import load_dotenv
+    _env_file = BASE_DIR / ".env"
+    if _env_file.exists():
         load_dotenv(_env_file)
-    except ImportError:
-        pass
+    else:
+        # Fallback: try cwd (e.g. if server runs from project root)
+        load_dotenv()
+except ImportError:
+    pass
 
 # Path for auto-generated secret key (created on first run if no env var set).
 SECRET_KEY_FILE = BASE_DIR / ".secret_key"
